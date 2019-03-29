@@ -7,15 +7,25 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	// This file auto loads the .env file on import :)
+	_ "github.com/joho/godotenv/autoload"
 )
 
 const (
-	DB_CONN_STR string = "DB_CONN_STR"
+	dbConnStr string = "DB_CONN_STR"
 )
 
 func main() {
+	constr := os.Getenv(dbConnStr)
+	fmt.Printf("Connection string: %s\n", constr)
+
+	if "dbname=photogal sslmode=disable" != constr {
+		fmt.Print("not equal\n")
+	}
+
 	// Initialize the DB
-	db, err := initDbCon(os.Getenv(DB_CONN_STR))
+	db, err := initDbCon(constr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,7 +40,7 @@ func main() {
 
 	// Set root route for returning API information
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Version: v%s", "1.0.0")
+		fmt.Fprintf(w, "Version: v%s\n", "1.0.0")
 	})
 
 	port := os.Getenv("port")
