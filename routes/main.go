@@ -17,19 +17,19 @@ func Init(db *sql.DB) *mux.Router {
 	galleriesRouter := r.PathPrefix("/galleries").Subrouter()
 
 	// Image routes
-	imagesRouter.HandleFunc("/", images.GetAllHandler(db)).Methods("GET")        // GET
-	imagesRouter.HandleFunc("/", images.CreateHandler(db)).Methods("POST")       // POST
-	imagesRouter.HandleFunc("/{id}", images.GetHandler(db)).Methods("GET")       // GET
-	imagesRouter.HandleFunc("/{id}", images.UpdateHandler(db)).Methods("PUT")    // PUT
-	imagesRouter.HandleFunc("/{id}", images.DeleteHandler(db)).Methods("DELETE") // DELETE
+	imagesRouter.HandleFunc("/", images.GetAllImagesHandler(db)).Methods("GET")       // GET
+	imagesRouter.HandleFunc("/", images.CreateImageHandler(db)).Methods("POST")       // POST
+	imagesRouter.HandleFunc("/{id}", images.GetImageHandler(db)).Methods("GET")       // GET
+	imagesRouter.HandleFunc("/{id}", images.UpdateImageHandler(db)).Methods("PUT")    // PUT
+	imagesRouter.HandleFunc("/{id}", images.DeleteImageHandler(db)).Methods("DELETE") // DELETE
 
 	// Gallery routes
-	galleriesRouter.HandleFunc("/", galleries.GetAllHandler(db)).Methods("GET")        // GET
-	galleriesRouter.HandleFunc("/", galleries.CreateHandler(db)).Methods("POST")       // POST
-	galleriesRouter.HandleFunc("/{id}", galleries.GetHandler(db)).Methods("GET")       // GET
-	galleriesRouter.HandleFunc("/{id}", galleries.UpdateHandler(db)).Methods("PUT")    // PUT
-	galleriesRouter.HandleFunc("/{id}", galleries.DeleteHandler(db)).Methods("DELETE") // DELETE
-	galleriesRouter.HandleFunc("/{id}/images", galleries.GetImages(db)).Methods("GET") // GET
+	galleriesRouter.HandleFunc("/", galleries.GetAllGalleriesHandler(db)).Methods("GET")      // GET
+	galleriesRouter.HandleFunc("/", galleries.CreateGalleryHandler(db)).Methods("POST")       // POST
+	galleriesRouter.HandleFunc("/{id}", galleries.GetGalleryHandler(db)).Methods("GET")       // GET
+	galleriesRouter.HandleFunc("/{id}", galleries.UpdateGalleryHandler(db)).Methods("PUT")    // PUT
+	galleriesRouter.HandleFunc("/{id}", galleries.DeleteGalleryHandler(db)).Methods("DELETE") // DELETE
+	galleriesRouter.HandleFunc("/{id}/images", galleries.GetGalleryImages(db)).Methods("GET") // GET
 
 	r.Use(middleware.LoggingMiddleware)
 
