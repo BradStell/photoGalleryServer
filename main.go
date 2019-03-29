@@ -14,11 +14,21 @@ const (
 )
 
 func main() {
-	db := initDbCon(os.Getenv(DB_CONN_STR))
-	seedDB(db)
+	// Initialize the DB
+	db, err := initDbCon(os.Getenv(DB_CONN_STR))
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	// Seed the DB schema
+	if err := seedDB(db); err != nil {
+		log.Fatal(err)
+	}
+
+	// Create and initialize API routes
 	router := routes.Init(db)
 
+	// Set root route for returning API information
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Version: v%s", "1.0.0")
 	})
@@ -31,25 +41,25 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
-func initDbCon(connStr string) *sql.DB {
-	db, err := sql.Open("postgres", "dbname=photogal sslmode=disable")
+func initDbCon(connStr string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	var now string
-	rows := db.QueryRow("SELECT NOW();")
-	// if err, ok := err.(*pq.Error); ok {
-	// 	log.Fatal(err.Code.Name())
-	// }
+	rows := db.QueryRow("SELECT NOW()")
 
-	rows.Scan(&now)
+	if err := rows.Scan(&now); err != nil {
+		return nil, err
+	}
+
 	fmt.Printf("Current time is %s\n", now)
 
-	return db
+	return db, nil
 }
 
-func seedDB(db *sql.DB) {
+func seedDB(db *sql.DB) error {
 	sql := `
 		CREATE TABLE IF NOT EXISTS ImageMeta(
 			id SERIAL PRIMARY KEY,
@@ -91,8 +101,9 @@ func seedDB(db *sql.DB) {
 	_, err := db.Exec(sql)
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	fmt.Println("DB seeded")
+	return nil
 }

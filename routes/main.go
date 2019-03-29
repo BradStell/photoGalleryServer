@@ -31,6 +31,7 @@ func Init(db *sql.DB) *mux.Router {
 	galleriesRouter.HandleFunc("/{id}", galleries.DeleteGalleryHandler(db)).Methods("DELETE") // DELETE
 	galleriesRouter.HandleFunc("/{id}/images", galleries.GetGalleryImages(db)).Methods("GET") // GET
 
+	// Mount middleware
 	r.Use(middleware.LoggingMiddleware)
 
 	return r
