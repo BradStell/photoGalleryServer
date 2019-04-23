@@ -17,11 +17,12 @@ func Init(db *sql.DB) *mux.Router {
 	galleriesRouter := r.PathPrefix("/galleries").Subrouter()
 
 	// Image routes
-	imagesRouter.HandleFunc("/", images.GetAllImagesHandler(db)).Methods("GET")       // GET
-	imagesRouter.HandleFunc("/", images.CreateImageHandler(db)).Methods("POST")       // POST
-	imagesRouter.HandleFunc("/{id}", images.GetImageHandler(db)).Methods("GET")       // GET
-	imagesRouter.HandleFunc("/{id}", images.UpdateImageHandler(db)).Methods("PUT")    // PUT
-	imagesRouter.HandleFunc("/{id}", images.DeleteImageHandler(db)).Methods("DELETE") // DELETE
+	imagesRouter.HandleFunc("/", images.GetAllImagesHandler(db)).Methods("GET")                                          // GET
+	imagesRouter.HandleFunc("", images.GetSlideshowImagesHandler(db)).Methods("GET").Queries("slideshow", "{slideshow}") // GET
+	imagesRouter.HandleFunc("/", images.CreateImageHandler(db)).Methods("POST")                                          // POST
+	imagesRouter.HandleFunc("/{id}", images.GetImageHandler(db)).Methods("GET")                                          // GET
+	imagesRouter.HandleFunc("/{id}", images.UpdateImageHandler(db)).Methods("PUT")                                       // PUT
+	imagesRouter.HandleFunc("/{id}", images.DeleteImageHandler(db)).Methods("DELETE")                                    // DELETE
 
 	// Gallery routes
 	galleriesRouter.HandleFunc("/", galleries.GetAllGalleriesHandler(db)).Methods("GET")      // GET
@@ -36,3 +37,17 @@ func Init(db *sql.DB) *mux.Router {
 
 	return r
 }
+
+// Routes Needed
+/*
+	Home Page
+		- Get all slideshow images
+		- Get about me image (hard coded resource ??)
+		- List of gallery names for menu dropdown
+
+	Gallery Pages
+	 	- Get gallery information (name, date, etc...)
+		- Get gallery cover image
+		- Get all images for gallery (low resolution **)
+		- Get full size image for each image (maybe on initial load - maybe lazy loaded)
+*/

@@ -11,13 +11,14 @@ import (
 
 // Image data structure for storing image meta data information
 type Image struct {
-	ID        int       `json:"id"`
-	Title     string    `json:"title"`
-	Path      string    `json:"path"`
-	Created   time.Time `json:"created"`
-	Modified  time.Time `json:"modified"`
-	HighResID *int      `json:"highResID"`
-	HighRes   *Image    `json:"highResMe"`
+	ID            int       `json:"id"`
+	Title         string    `json:"title"`
+	Path          string    `json:"path"`
+	IsOnSlideshow bool      `json:"isOnSlideshow"`
+	Created       time.Time `json:"created"`
+	Modified      time.Time `json:"modified"`
+	HighResID     *int      `json:"highResID"`
+	HighRes       *Image    `json:"highResMe"`
 }
 
 func (i *Image) create(db *sql.DB) (*Image, error) {

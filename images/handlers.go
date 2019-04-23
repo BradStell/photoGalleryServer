@@ -9,6 +9,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// GetSlideshowImagesHandler returns a list of images on the homepage slide show
+func GetSlideshowImagesHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		slideshow := mux.Vars(r)["slideshow"]
+
+		fmt.Fprintf(w, "slideshow: %s", slideshow)
+	}
+}
+
 // GetAllImagesHandler returns a HandlerFunc for getting all images
 func GetAllImagesHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

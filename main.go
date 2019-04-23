@@ -75,6 +75,7 @@ func seedDB(db *sql.DB) error {
 			id SERIAL PRIMARY KEY,
 			title varchar(80),
 			path varchar(100),
+			is_on_slideshow boolean,
 			created timestamptz DEFAULT now(),
 			modified timestamptz DEFAULT now(),
 			high_res_id integer,
@@ -97,14 +98,6 @@ func seedDB(db *sql.DB) error {
 			created timestamptz DEFAULT now(),
 			priorety integer DEFAULT 0,
 			PRIMARY KEY (image_id, gallery_id) 
-		);
-
-		CREATE TABLE IF NOT EXISTS SlideShow(
-			id SERIAL PRIMARY KEY,
-			image_id integer,
-			priorety integer DEFAULT 0,
-			created timestamptz DEFAULT now(),
-			FOREIGN KEY(image_id) REFERENCES ImageMeta(id)
 		);
 	`
 
